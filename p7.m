@@ -1,0 +1,14 @@
+i_a = (0:20) * 3;
+v_phase = zeros(1,21);
+e_a = 277.0;
+x_s = 1.0;
+theta = 36.57 * (pi/180);
+
+for ii = 1:21
+    v_phase(ii) = sqrt(e_a^2 - (x_s * i_a(ii) * cos(theta))^2) - x_s * i_a(ii) * sin(theta);
+end
+
+v_t = v_phase * sqrt(3);
+plot(i_a, v_t, 'Color', 'k', 'LineWidth', 2.0);
+grid on;
+axis([0 60 400 550]);
