@@ -1,0 +1,41 @@
+bmax = 1;
+freq = 60;
+w = 2*pi*freq;
+
+t = 0:1/6000:1/60;
+
+theta_a = 0;
+theta_b = -2*pi/3;
+theta_c = 2*pi/3;
+
+Baa = sin(w*t) .* (cos(theta_a) + 1j*sin(theta_a));
+Bbb = sin(w*t + theta_b) .* (cos(theta_b) + 1j*sin(theta_b));
+Bcc = sin(w*t + theta_c) .* (cos(theta_c) + 1j*sin(theta_c));
+
+Bnet = Baa + Bbb + Bcc;
+% Rotor loop setup
+theta_r0 = -pi;     % Initial rotor mechanical angle (60 degrees offset)
+w_mech = -2*pi*60;     % Rotor rotates at same speed as stator field (synchronous)
+Br_mag = 1.5;         % Rotor magnetic field magnitude
+
+Br = Br_mag * exp(1j*(w_mech*t + theta_r0));   % Rotor field vector (rotating)
+
+circle = 1.5 * (cos(w*t) + 1j*sin(w*t));
+
+for ii = 1:length(t);
+    clf; hold on;
+
+    plot(real(circle) , imag(circle) , 'k--');
+
+    plot([0 real(Baa(ii))], [0 imag(Baa(ii))], 'k', 'LineWidth', 2);
+    plot([0 real(Bbb(ii))], [0 imag(Bbb(ii))], 'b', 'LineWidth', 2);
+    plot([0 real(Bcc(ii))], [0 imag(Bcc(ii))], 'm', 'LineWidth', 2);
+    plot([0 real(Bnet(ii))], [0 imag(Bnet(ii))], 'r', 'LineWidth', 3);
+    plot([0 real(Br(ii))], [0 imag(Br(ii))], 'g', 'LineWidth', 3); % Rotor field
+
+    axis square;
+    axis([-2 2 -2 2]);
+
+    drawnow;
+    hold off;
+end
